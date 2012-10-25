@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -15,6 +16,15 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,19 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\elfinder\css\commands.css" />
-    <Content Include="Content\elfinder\css\common.css" />
-    <Content Include="Content\elfinder\css\contextmenu.css" />
-    <Content Include="Content\elfinder\css\cwd.css" />
-    <Content Include="Content\elfinder\css\dialog.css" />
     <Content Include="Content\elfinder\css\elfinder.min.css" />
-    <Content Include="Content\elfinder\css\fonts.css" />
-    <Content Include="Content\elfinder\css\navbar.css" />
-    <Content Include="Content\elfinder\css\places.css" />
-    <Content Include="Content\elfinder\css\quicklook.css" />
-    <Content Include="Content\elfinder\css\statusbar.css" />
-    <Content Include="Content\elfinder\css\theme.css" />
-    <Content Include="Content\elfinder\css\toolbar.css" />
     <Content Include="Content\elfinder\img\arrows-active.png" />
     <Content Include="Content\elfinder\img\arrows-normal.png" />
     <Content Include="Content\elfinder\img\crop.gif" />
@@ -96,42 +94,7 @@
     <Content Include="Content\elfinder\img\resize.png" />
     <Content Include="Content\elfinder\img\spinner-mini.gif" />
     <Content Include="Content\elfinder\img\toolbar.png" />
-    <Content Include="Content\elfinder\js\commands\archive.js" />
-    <Content Include="Content\elfinder\js\commands\back.js" />
-    <Content Include="Content\elfinder\js\commands\copy.js" />
-    <Content Include="Content\elfinder\js\commands\cut.js" />
-    <Content Include="Content\elfinder\js\commands\download.js" />
-    <Content Include="Content\elfinder\js\commands\duplicate.js" />
-    <Content Include="Content\elfinder\js\commands\edit.js" />
-    <Content Include="Content\elfinder\js\commands\extract.js" />
-    <Content Include="Content\elfinder\js\commands\forward.js" />
-    <Content Include="Content\elfinder\js\commands\getfile.js" />
-    <Content Include="Content\elfinder\js\commands\help.js" />
-    <Content Include="Content\elfinder\js\commands\home.js" />
-    <Content Include="Content\elfinder\js\commands\info.js" />
-    <Content Include="Content\elfinder\js\commands\mkdir.js" />
-    <Content Include="Content\elfinder\js\commands\mkfile.js" />
-    <Content Include="Content\elfinder\js\commands\netmount.js" />
-    <Content Include="Content\elfinder\js\commands\open.js" />
-    <Content Include="Content\elfinder\js\commands\paste.js" />
-    <Content Include="Content\elfinder\js\commands\quicklook.js" />
-    <Content Include="Content\elfinder\js\commands\quicklook.plugins.js" />
-    <Content Include="Content\elfinder\js\commands\reload.js" />
-    <Content Include="Content\elfinder\js\commands\rename.js" />
-    <Content Include="Content\elfinder\js\commands\resize.js" />
-    <Content Include="Content\elfinder\js\commands\rm.js" />
-    <Content Include="Content\elfinder\js\commands\search.js" />
-    <Content Include="Content\elfinder\js\commands\sort.js" />
-    <Content Include="Content\elfinder\js\commands\up.js" />
-    <Content Include="Content\elfinder\js\commands\upload.js" />
-    <Content Include="Content\elfinder\js\commands\view.js" />
-    <Content Include="Content\elfinder\js\elFinder.command.js" />
-    <Content Include="Content\elfinder\js\elFinder.history.js" />
-    <Content Include="Content\elfinder\js\elFinder.js" />
     <Content Include="Content\elfinder\js\elfinder.min.js" />
-    <Content Include="Content\elfinder\js\elFinder.options.js" />
-    <Content Include="Content\elfinder\js\elFinder.resources.js" />
-    <Content Include="Content\elfinder\js\elFinder.version.js" />
     <Content Include="Content\elfinder\js\i18n\elfinder.ar.js" />
     <Content Include="Content\elfinder\js\i18n\elfinder.bg.js" />
     <Content Include="Content\elfinder\js\i18n\elfinder.ca.js" />
@@ -153,26 +116,6 @@
     <Content Include="Content\elfinder\js\i18n\elfinder.ru.js" />
     <Content Include="Content\elfinder\js\i18n\elfinder.tr.js" />
     <Content Include="Content\elfinder\js\i18n\elfinder.zh_CN.js" />
-    <Content Include="Content\elfinder\js\jquery.dialogelfinder.js" />
-    <Content Include="Content\elfinder\js\jquery.elfinder.js" />
-    <Content Include="Content\elfinder\js\proxy\elFinderSupportVer1.js" />
-    <Content Include="Content\elfinder\js\ui\button.js" />
-    <Content Include="Content\elfinder\js\ui\contextmenu.js" />
-    <Content Include="Content\elfinder\js\ui\cwd.js" />
-    <Content Include="Content\elfinder\js\ui\dialog.js" />
-    <Content Include="Content\elfinder\js\ui\navbar.js" />
-    <Content Include="Content\elfinder\js\ui\overlay.js" />
-    <Content Include="Content\elfinder\js\ui\panel.js" />
-    <Content Include="Content\elfinder\js\ui\path.js" />
-    <Content Include="Content\elfinder\js\ui\places.js" />
-    <Content Include="Content\elfinder\js\ui\searchbutton.js" />
-    <Content Include="Content\elfinder\js\ui\sortbutton.js" />
-    <Content Include="Content\elfinder\js\ui\stat.js" />
-    <Content Include="Content\elfinder\js\ui\toolbar.js" />
-    <Content Include="Content\elfinder\js\ui\tree.js" />
-    <Content Include="Content\elfinder\js\ui\uploadButton.js" />
-    <Content Include="Content\elfinder\js\ui\viewbutton.js" />
-    <Content Include="Content\elfinder\js\ui\workzone.js" />
     <Content Include="Content\elfinder\sounds\rm.wav" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
@@ -202,18 +145,13 @@
       <Name>ElFinder.Net</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Content\elfinder\img\src\dialogs.pxm" />
-    <None Include="Content\elfinder\img\src\icons-big.psd" />
-    <None Include="Content\elfinder\img\src\icons-big.pxm" />
-    <None Include="Content\elfinder\img\src\icons-small copy.pxm" />
-    <None Include="Content\elfinder\img\src\icons-small.psd" />
-    <None Include="Content\elfinder\img\src\icons-small.pxm" />
-    <None Include="Content\elfinder\img\src\quicklook-icons.pxm" />
-    <None Include="Content\elfinder\img\src\toolbar.pxm" />
-  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
