@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F14BB5C5-4F35-40CE-AD61-F099A08102CC}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ElFinder.Sample</RootNamespace>
+    <AssemblyName>ElFinder.Sample</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\FilesController.cs" />
+    <Compile Include="Controllers\IndexController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\elfinder\css\commands.css" />
+    <Content Include="Content\elfinder\css\common.css" />
+    <Content Include="Content\elfinder\css\contextmenu.css" />
+    <Content Include="Content\elfinder\css\cwd.css" />
+    <Content Include="Content\elfinder\css\dialog.css" />
+    <Content Include="Content\elfinder\css\elfinder.min.css" />
+    <Content Include="Content\elfinder\css\fonts.css" />
+    <Content Include="Content\elfinder\css\navbar.css" />
+    <Content Include="Content\elfinder\css\places.css" />
+    <Content Include="Content\elfinder\css\quicklook.css" />
+    <Content Include="Content\elfinder\css\statusbar.css" />
+    <Content Include="Content\elfinder\css\theme.css" />
+    <Content Include="Content\elfinder\css\toolbar.css" />
+    <Content Include="Content\elfinder\img\arrows-active.png" />
+    <Content Include="Content\elfinder\img\arrows-normal.png" />
+    <Content Include="Content\elfinder\img\crop.gif" />
+    <Content Include="Content\elfinder\img\dialogs.png" />
+    <Content Include="Content\elfinder\img\icons-big.png" />
+    <Content Include="Content\elfinder\img\icons-small.png" />
+    <Content Include="Content\elfinder\img\logo.png" />
+    <Content Include="Content\elfinder\img\progress.gif" />
+    <Content Include="Content\elfinder\img\quicklook-bg.png" />
+    <Content Include="Content\elfinder\img\quicklook-icons.png" />
+    <Content Include="Content\elfinder\img\resize.png" />
+    <Content Include="Content\elfinder\img\spinner-mini.gif" />
+    <Content Include="Content\elfinder\img\toolbar.png" />
+    <Content Include="Content\elfinder\js\commands\archive.js" />
+    <Content Include="Content\elfinder\js\commands\back.js" />
+    <Content Include="Content\elfinder\js\commands\copy.js" />
+    <Content Include="Content\elfinder\js\commands\cut.js" />
+    <Content Include="Content\elfinder\js\commands\download.js" />
+    <Content Include="Content\elfinder\js\commands\duplicate.js" />
+    <Content Include="Content\elfinder\js\commands\edit.js" />
+    <Content Include="Content\elfinder\js\commands\extract.js" />
+    <Content Include="Content\elfinder\js\commands\forward.js" />
+    <Content Include="Content\elfinder\js\commands\getfile.js" />
+    <Content Include="Content\elfinder\js\commands\help.js" />
+    <Content Include="Content\elfinder\js\commands\home.js" />
+    <Content Include="Content\elfinder\js\commands\info.js" />
+    <Content Include="Content\elfinder\js\commands\mkdir.js" />
+    <Content Include="Content\elfinder\js\commands\mkfile.js" />
+    <Content Include="Content\elfinder\js\commands\netmount.js" />
+    <Content Include="Content\elfinder\js\commands\open.js" />
+    <Content Include="Content\elfinder\js\commands\paste.js" />
+    <Content Include="Content\elfinder\js\commands\quicklook.js" />
+    <Content Include="Content\elfinder\js\commands\quicklook.plugins.js" />
+    <Content Include="Content\elfinder\js\commands\reload.js" />
+    <Content Include="Content\elfinder\js\commands\rename.js" />
+    <Content Include="Content\elfinder\js\commands\resize.js" />
+    <Content Include="Content\elfinder\js\commands\rm.js" />
+    <Content Include="Content\elfinder\js\commands\search.js" />
+    <Content Include="Content\elfinder\js\commands\sort.js" />
+    <Content Include="Content\elfinder\js\commands\up.js" />
+    <Content Include="Content\elfinder\js\commands\upload.js" />
+    <Content Include="Content\elfinder\js\commands\view.js" />
+    <Content Include="Content\elfinder\js\elFinder.command.js" />
+    <Content Include="Content\elfinder\js\elFinder.history.js" />
+    <Content Include="Content\elfinder\js\elFinder.js" />
+    <Content Include="Content\elfinder\js\elfinder.min.js" />
+    <Content Include="Content\elfinder\js\elFinder.options.js" />
+    <Content Include="Content\elfinder\js\elFinder.resources.js" />
+    <Content Include="Content\elfinder\js\elFinder.version.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.ar.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.bg.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.ca.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.cs.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.de.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.en.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.es.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.fa.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.fr.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.hu.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.it.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.jp.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.ko.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.LANG.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.nl.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.no.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.pl.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.pt_BR.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.ru.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.tr.js" />
+    <Content Include="Content\elfinder\js\i18n\elfinder.zh_CN.js" />
+    <Content Include="Content\elfinder\js\jquery.dialogelfinder.js" />
+    <Content Include="Content\elfinder\js\jquery.elfinder.js" />
+    <Content Include="Content\elfinder\js\proxy\elFinderSupportVer1.js" />
+    <Content Include="Content\elfinder\js\ui\button.js" />
+    <Content Include="Content\elfinder\js\ui\contextmenu.js" />
+    <Content Include="Content\elfinder\js\ui\cwd.js" />
+    <Content Include="Content\elfinder\js\ui\dialog.js" />
+    <Content Include="Content\elfinder\js\ui\navbar.js" />
+    <Content Include="Content\elfinder\js\ui\overlay.js" />
+    <Content Include="Content\elfinder\js\ui\panel.js" />
+    <Content Include="Content\elfinder\js\ui\path.js" />
+    <Content Include="Content\elfinder\js\ui\places.js" />
+    <Content Include="Content\elfinder\js\ui\searchbutton.js" />
+    <Content Include="Content\elfinder\js\ui\sortbutton.js" />
+    <Content Include="Content\elfinder\js\ui\stat.js" />
+    <Content Include="Content\elfinder\js\ui\toolbar.js" />
+    <Content Include="Content\elfinder\js\ui\tree.js" />
+    <Content Include="Content\elfinder\js\ui\uploadButton.js" />
+    <Content Include="Content\elfinder\js\ui\viewbutton.js" />
+    <Content Include="Content\elfinder\js\ui\workzone.js" />
+    <Content Include="Content\elfinder\sounds\rm.wav" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Index\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ElFinder.Net\ElFinder.Net.csproj">
+      <Project>{4635B781-A1A1-40A3-B57D-26CF552695BB}</Project>
+      <Name>ElFinder.Net</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\elfinder\img\src\dialogs.pxm" />
+    <None Include="Content\elfinder\img\src\icons-big.psd" />
+    <None Include="Content\elfinder\img\src\icons-big.pxm" />
+    <None Include="Content\elfinder\img\src\icons-small copy.pxm" />
+    <None Include="Content\elfinder\img\src\icons-small.psd" />
+    <None Include="Content\elfinder\img\src\icons-small.pxm" />
+    <None Include="Content\elfinder\img\src\quicklook-icons.pxm" />
+    <None Include="Content\elfinder\img\src\toolbar.pxm" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>18151</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

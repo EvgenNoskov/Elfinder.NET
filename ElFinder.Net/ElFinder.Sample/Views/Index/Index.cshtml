@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section head
+{
+    <link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/elfinder/css/elfinder.min.css")" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@Url.Content("~/Content/elfinder/css/theme.css")" />
+	<script type="text/javascript" src="@Url.Content("~/Content/elfinder/js/elfinder.min.js")"></script>
+	<script type="text/javascript" src="@Url.Content("~/Content/elfinder/js/i18n/elfinder.ru.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            var myCommands = elFinder.prototype._options.commands;
+            var disabled = ['extract', 'archive', 'resize', 'help', 'select'];
+            $.each(disabled, function (i, cmd) {
+                (idx = $.inArray(cmd, myCommands)) !== -1 && myCommands.splice(idx, 1);
+            });
+            var selectedFile = null;
+            var options = {
+                url: 'connector',
+                commands: myCommands,
+                lang: 'ru',
+                uiOptions: {
+                    toolbar: [
+		                ['back', 'forward'],
+                        ['reload'],
+                        ['home', 'up'],
+		                ['mkdir', 'mkfile', 'upload'],
+		                ['open', 'download'],
+		                ['info'],
+		                ['quicklook'],
+		                ['copy', 'cut', 'paste'],
+		                ['rm'],
+		                ['duplicate', 'rename', 'edit'],
+		                ['view', 'sort']
+	                ]
+                },
+                handlers: {
+                    select: function (event, elfinderInstance) {
+
+                        if (event.data.selected.length == 1) {
+                            var item = $('#' + event.data.selected[0]);
+                            if (!item.hasClass('directory')) {
+                                selectedFile = event.data.selected[0];
+                                $('#elfinder-selectFile').show();
+                                return;
+                            }
+                        }
+                        $('#elfinder-selectFile').hide();
+                        selectedFile = null;
+                    }
+                }
+            };
+            $('#elfinder').elfinder(options).elfinder('instance');
+
+            $('.elfinder-toolbar:first').append('<div class="ui-widget-content ui-corner-all elfinder-buttonset" id="elfinder-selectFile" style="display:none; float:right;">'+
+            '<div class="ui-state-default elfinder-button" title="Select" style="width: 100px;"></div>');
+            $('#elfinder-selectFile').click(function () {
+                if (selectedFile != null)
+                    $.post('files/selectFile', { target: selectedFile }, function (response) {
+                        alert(response);
+                    });
+               
+            });
+        });
+    </script>
+}
+<div id="elfinder"></div>
+
+
+
+
