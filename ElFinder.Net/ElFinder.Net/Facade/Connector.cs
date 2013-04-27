@@ -26,7 +26,7 @@ namespace ElFinder
         /// </summary>
         /// <param name="request">Request from elFinder</param>
         /// <returns>Json response, which must be sent to elfinder</returns>
-        public JsonResult Process(HttpRequestBase request)
+        public ActionResult Process(HttpRequestBase request)
         {
             NameValueCollection parameters = request.QueryString.Count > 0 ? request.QueryString : request.Form;
             string cmdName = parameters["cmd"];
@@ -49,6 +49,10 @@ namespace ElFinder
                             return Error.MissedParameter(cmdName);
                         return _driver.Open(target, !string.IsNullOrEmpty(parameters["tree"]) && parameters["tree"] == "1");
                     }
+                case "file":
+                    if (string.IsNullOrEmpty(target))
+                        return Error.MissedParameter(cmdName);
+                    return _driver.File(target, !string.IsNullOrEmpty(parameters["download"]) && parameters["download"] == "1");
                 case "tree":
                     if (string.IsNullOrEmpty(target))
                         return Error.MissedParameter(cmdName);

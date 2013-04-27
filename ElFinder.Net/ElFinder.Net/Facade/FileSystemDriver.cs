@@ -23,42 +23,6 @@ namespace ElFinder
         {
             return new JsonDataContractResult(data) { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
-        public FullPath ParsePath(string target)
-        {
-            StringBuilder volumeIdBuilder = new StringBuilder();
-            StringBuilder pathBuilder = null;
-            foreach (var c in target)
-            {
-                if (pathBuilder != null)
-                {
-                    pathBuilder.Append(c);
-                }
-                else
-                {
-                    volumeIdBuilder.Append(c);
-                    if (c == '_')
-                    {
-                        pathBuilder = new StringBuilder();
-                    }
-                }
-            }
-            Root root = _roots.First(r => r.VolumeId == volumeIdBuilder.ToString());
-            string path = Helper.DecodePath(pathBuilder.ToString());
-            string dirUrl = path != root.Directory.Name ? path : string.Empty;
-            var dir = new DirectoryInfo(root.Directory.FullName + dirUrl);
-            if (dir.Exists)
-            {
-                string parentPath = dir.FullName.Substring(root.Directory.FullName.Length).Replace('\\', '/');
-                return new FullPath() { Directory = dir, Root = root, RelativePath = root.Alias + parentPath };
-            }
-            else
-            {
-                var file = new FileInfo(root.Directory.FullName + dirUrl);
-                string parentPath = file.FullName.Substring(root.Directory.FullName.Length).Replace('\\', '/');
-                return new FullPath() { File = file, Root = root, RelativePath = root.Alias + parentPath };
-            }
-        }
-
         private void DirectoryCopy(DirectoryInfo sourceDir, string destDirName, bool copySubDirs)
         { 
             DirectoryInfo[] dirs = sourceDir.GetDirectories();
@@ -105,6 +69,42 @@ namespace ElFinder
         #endregion
 
         #region public 
+        
+        public FullPath ParsePath(string target)
+        {
+            StringBuilder volumeIdBuilder = new StringBuilder();
+            StringBuilder pathBuilder = null;
+            foreach (var c in target)
+            {
+                if (pathBuilder != null)
+                {
+                    pathBuilder.Append(c);
+                }
+                else
+                {
+                    volumeIdBuilder.Append(c);
+                    if (c == '_')
+                    {
+                        pathBuilder = new StringBuilder();
+                    }
+                }
+            }
+            Root root = _roots.First(r => r.VolumeId == volumeIdBuilder.ToString());
+            string path = Helper.DecodePath(pathBuilder.ToString());
+            string dirUrl = path != root.Directory.Name ? path : string.Empty;
+            var dir = new DirectoryInfo(root.Directory.FullName + dirUrl);
+            if (dir.Exists)
+            {
+                string parentPath = dir.FullName.Substring(root.Directory.FullName.Length).Replace('\\', '/');
+                return new FullPath() { Directory = dir, Root = root, RelativePath = root.Alias + parentPath };
+            }
+            else
+            {
+                var file = new FileInfo(root.Directory.FullName + dirUrl);
+                string parentPath = file.FullName.Substring(root.Directory.FullName.Length).Replace('\\', '/');
+                return new FullPath() { File = file, Root = root, RelativePath = root.Alias + parentPath };
+            }
+        }
 
         /// <summary>
         /// Initialize new instance of class ElFinder.FileSystemDriver 
@@ -189,6 +189,15 @@ namespace ElFinder
             answer.Options.Url = root.Url;
             answer.Options.ThumbnailsUrl = root.TmbUrl;
             return Json(answer);
+        }
+        ActionResult IDriver.File(string target, bool download)
+        {
+            FullPath fullPath = ParsePath(target);
+            if (!fullPath.File.Exists)
+                return new HttpNotFoundResult("File not found");
+            if (fullPath.Root.IsShowOnly)
+                return new HttpStatusCodeResult(403, "Access denied");
+            return new DownloadFileResult(fullPath.File, download);
         }
         JsonResult IDriver.Parents(string target)
         {
@@ -351,19 +360,74 @@ namespace ElFinder
         {
             FullPath dest = ParsePath(target);
             var response = new AddResponse();
+            if (dest.Root.MaxUploadSize.HasValue)
+            {
+                for (int i = 0; i < targets.AllKeys.Length; i++)
+                {
+                    HttpPostedFileBase file = targets[i];
+                    if (file.ContentLength > dest.Root.MaxUploadSize.Value)
+                    {
+                        return Error.MaxUploadFileSize();
+                    }
+                }
+            }
             for (int i = 0; i < targets.AllKeys.Length; i++)
             {
-                HttpPostedFileBase file = targets[i];
+                HttpPostedFileBase file = targets[i];                
                 string path = Path.Combine(dest.Directory.FullName, file.FileName);
+
                 if (File.Exists(path))
                 {
-                    //TODO: throw error
+                    if (dest.Root.UploadOverwrite)
+                    {
+                        //if file already exist we rename the current file, 
+                        //and if upload is succesfully delete temp file, in otherwise we restore old file
+                        string tmpPath = path + Guid.NewGuid();
+                        bool uploaded = false;
+                        try
+                        {
+                            File.Move(path, tmpPath);
+                            file.SaveAs(path);
+                            uploaded = true;
+                        }
+                        catch { }
+                        finally
+                        {
+                            if (uploaded)
+                            {
+                                File.Delete(tmpPath);
+                            }
+                            else
+                            {
+                                if (File.Exists(path))
+                                    File.Delete(path);
+                                File.Move(tmpPath, path);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string name = null;
+                        for (int j = 1; j < 100; j++)
+                        {
+                            string suggestName = Path.GetFileNameWithoutExtension(file.FileName) + "-" + j + Path.GetExtension(file.FileName);
+                            if (!File.Exists(Path.Combine(dest.Directory.FullName, suggestName)))
+                            {
+                                name = suggestName;
+                                break;
+                            }
+                        }
+                        if (name == null)
+                            name = Path.GetFileNameWithoutExtension(file.FileName) + "-" + Guid.NewGuid() + Path.GetExtension(file.FileName);
+                        path = Path.Combine(dest.Directory.FullName, name);
+                        file.SaveAs(path);
+                    }
                 }
                 else
                 {
                     file.SaveAs(path);
-                    response.Added.Add((FileDTO)DTOBase.Create(new FileInfo(path), dest.Root));
-                }
+                }                
+                response.Added.Add((FileDTO)DTOBase.Create(new FileInfo(path), dest.Root));
             }
             return Json(response);
         }
@@ -427,11 +491,5 @@ namespace ElFinder
         }
 
         #endregion IDriver
-
-
-
-
-
-       
     }
 }
