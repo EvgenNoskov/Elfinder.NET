@@ -10,24 +10,30 @@ namespace ElFinder.Sample.Controllers
 {
     public class FilesController : Controller
     {
-      
+        private Connector _connector;
+
+        public Connector Connector
+        {
+            get
+            {
+                if (_connector == null)
+                {
+                    FileSystemDriver driver = new FileSystemDriver();
+                    driver.AddRoot(new Root(new DirectoryInfo(@"C:\Program Files"), "/Program Files/") { IsReadOnly = true });
+                    driver.AddRoot(new Root(new DirectoryInfo(Server.MapPath("~/Files")), "/Files/") { Alias = "My documents", StartPath = new DirectoryInfo(Server.MapPath("~/Files/новая папка")) });                    
+                    _connector = new Connector(driver); 
+                }
+                return _connector;
+            }
+        }
         public ActionResult Index()
         {
-            FileSystemDriver driver = new FileSystemDriver();
-            driver.AddRoot(new Root(new DirectoryInfo(Server.MapPath("~/Files")), "http://" +  Request.Url.Authority + "/Files/") { IsReadOnly = false, Alias = "Мои документы" });
-            driver.AddRoot(new Root(new DirectoryInfo(@"C:\Program Files"), "http://" +  Request.Url.Authority + "/") { IsReadOnly = true });
-            var connector = new Connector(driver);  
-            return connector.Process(this.HttpContext.Request);
+            return Connector.Process(this.HttpContext.Request);
         }
 
         public ActionResult SelectFile(string target)
         {
-            FileSystemDriver driver = new FileSystemDriver();
-            driver.AddRoot(new Root(new DirectoryInfo(Server.MapPath("~/Files")), "http://" + Request.Url.Authority + "/Files/") { IsReadOnly = false, Alias = "Мои документы" });
-            driver.AddRoot(new Root(new DirectoryInfo(@"C:\Program Files"), "http://" + Request.Url.Authority + "/") { IsReadOnly = true });
-            var connector = new Connector(driver);
-            return Json(connector.GetFileByHash(target).FullName);
+            return Json(Connector.GetFileByHash(target).FullName);
         }
-
     }
 }

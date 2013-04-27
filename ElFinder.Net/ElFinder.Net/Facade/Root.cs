@@ -18,6 +18,8 @@ namespace ElFinder
         string _tmbPath;
         string _tmbUrl;
         int _tmbSize;
+
+        DirectoryInfo _startPath;
         
         string _tmbBgColor;
         string _url;
@@ -94,6 +96,17 @@ namespace ElFinder
             set { _tmbBgColor = value; }
         }
         public bool IsReadOnly { get; set; }
+
+        public DirectoryInfo StartPath
+        {
+            get { return _startPath; }
+            set
+            {
+                if (!value.Exists)
+                    throw new ArgumentException("Start directory must exist", "value");
+                _startPath = value;
+            }
+        }        
        
         #endregion public
     }

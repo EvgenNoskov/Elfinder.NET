@@ -151,8 +151,10 @@ namespace ElFinder
             DirectoryInfo dir;
             if (string.IsNullOrEmpty(target))
             {
-                root = _roots.First();
-                dir = root.Directory;
+                root = _roots.FirstOrDefault(r => r.StartPath != null);
+                if (root == null)
+                    root = _roots.First();
+                dir = root.StartPath == null ? root.Directory : root.StartPath;
             }
             else
             {
@@ -175,26 +177,13 @@ namespace ElFinder
             {
                 answer.AddResponse(DTOBase.Create(item.Directory, item));
             }
-            foreach (var item in root.Directory.GetDirectories())
+            if (root.Directory.FullName != dir.FullName)
             {
-              answer.AddResponse(DTOBase.Create(item, root));  
+                foreach (var item in root.Directory.GetDirectories())
+                {
+                    answer.AddResponse(DTOBase.Create(item, root));
+                }
             }
-            //if (dir.FullName != root.Directory.FullName)
-            //{
-            //    foreach (var item in root.Directory.GetDirectories())
-            //    {
-            //        if (item.FullName == root.Directory.FullName)
-            //        {
-            //            foreach (var rootSubDir in item.GetDirectories())
-            //            {
-            //                if (rootSubDir.FullName != dir.FullName)
-            //                {
-            //                    answer.AddResponse(DTOBase.Create(rootSubDir, item));
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
             string parentPath = string.IsNullOrEmpty(target) ? root.Alias : root.Alias + dir.FullName.Substring(root.Directory.FullName.Length).Replace('\\', '/');
             answer.Options.Path = parentPath;
             answer.Options.Url = root.Url;
