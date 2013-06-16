@@ -6,6 +6,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElFinder.Sample", "ElFinder.Sample\ElFinder.Sample.csproj", "{F14BB5C5-4F35-40CE-AD61-F099A08102CC}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs15
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ElFinder.Net\\ElFinder.Net.csproj
+		SccProjectName1 = ElFinder.Net
+		SccLocalPath1 = ElFinder.Net
+		SccProjectUniqueName2 = ElFinder.Sample\\ElFinder.Sample.csproj
+		SccProjectName2 = ElFinder.Sample
+		SccLocalPath2 = ElFinder.Sample
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

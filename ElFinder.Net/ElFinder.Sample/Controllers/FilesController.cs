@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using ElFinder;
+﻿using System.Web.Mvc;
 using System.IO;
 
 namespace ElFinder.Sample.Controllers
@@ -19,8 +14,23 @@ namespace ElFinder.Sample.Controllers
                 if (_connector == null)
                 {
                     FileSystemDriver driver = new FileSystemDriver();
-                    driver.AddRoot(new Root(new DirectoryInfo(@"C:\Program Files"), "/Program Files/") { IsReadOnly = true });
-                    driver.AddRoot(new Root(new DirectoryInfo(Server.MapPath("~/Files")), "/Files/") { Alias = "My documents", StartPath = new DirectoryInfo(Server.MapPath("~/Files/новая папка")) });                    
+                    DirectoryInfo thumbsStorage = new DirectoryInfo(Server.MapPath("~/Files"));
+                    driver.AddRoot(new Root(new DirectoryInfo(@"C:\Program Files"))
+                    {
+                        IsLocked = true,
+                        IsReadOnly = true,
+                        IsShowOnly = true,
+                        ThumbnailsStorage = thumbsStorage,
+                        ThumbnailsUrl = "Thumbnails/"
+                    });
+                    driver.AddRoot(new Root(new DirectoryInfo(Server.MapPath("~/Files")), "/Files/")
+                    {
+                        Alias = "My documents",
+                        StartPath = new DirectoryInfo(Server.MapPath("~/Files/новая папка")),
+                        MaxUploadSizeInMb = 2.2,
+                        ThumbnailsStorage = thumbsStorage,
+                        ThumbnailsUrl = "Thumbnails/"
+                    });
                     _connector = new Connector(driver); 
                 }
                 return _connector;
@@ -34,6 +44,11 @@ namespace ElFinder.Sample.Controllers
         public ActionResult SelectFile(string target)
         {
             return Json(Connector.GetFileByHash(target).FullName);
+        }
+
+        public ActionResult Thumbs(string tmb)
+        {
+            return Connector.GetThumbnail(Request, Response, tmb);
         }
     }
 }

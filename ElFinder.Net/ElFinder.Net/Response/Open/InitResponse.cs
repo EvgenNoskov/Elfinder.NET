@@ -13,15 +13,15 @@ namespace ElFinder.Response
         public string Api { get { return "2.0"; } }
 
         [DataMember(Name = "uplMaxSize")]
-        public string UploadMaxSize { get { return string.Empty; } }
+        public string UploadMaxSize { get; set; }
 
         [DataMember(Name = "netDrivers")]
         public IEnumerable<string> NetDrivers { get { return _empty; } }
 
-        public InitResponse(DTOBase currentWorkingDirectory)
+        public InitResponse(DTOBase currentWorkingDirectory, Options options)
             : base(currentWorkingDirectory)
         {
-            Options = new Options();
+            Options = options;
         }
     }
 }

@@ -9,6 +9,9 @@ namespace ElFinder.DTO
     internal class ImageDTO : FileDTO
     {   
         [DataMember(Name = "tmb")]
-        public string Thumbnail { get; set; }
+        public object Thumbnail { get; set; }
+
+        [DataMember(Name = "dim")]
+        public string Dimension { get; set; }
     }
 }

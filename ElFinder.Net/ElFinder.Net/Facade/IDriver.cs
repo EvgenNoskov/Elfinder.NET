@@ -20,6 +20,8 @@ namespace ElFinder
         JsonResult Put(string target, string content);        
         JsonResult Paste(string  source, string dest, IEnumerable<string> targets, bool isCut);
         JsonResult Upload(string target, HttpFileCollectionBase targets);
+        JsonResult Thumbs(IEnumerable<string> targets);
+        JsonResult Dim(string target);
         ActionResult File(string target, bool download);
         FullPath ParsePath(string target);
     }

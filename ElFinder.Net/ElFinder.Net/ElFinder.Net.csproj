@@ -41,11 +41,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpCacheHelper.cs" />
     <Compile Include="DownloadFileResult.cs" />
     <Compile Include="DTO\DirectoryDTO.cs" />
     <Compile Include="DTO\DTOBase.cs" />
@@ -59,10 +61,14 @@
     <Compile Include="Facade\IDriver.cs" />
     <Compile Include="Facade\Root.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="PicturesEditor\IPicturesEditor.cs" />
     <Compile Include="JsonDataContractResult.cs" />
     <Compile Include="Mime.cs" />
+    <Compile Include="PicturesEditor\Thumbnail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Response\AddResponse.cs" />
+    <Compile Include="Response\DimResponse.cs" />
+    <Compile Include="Response\ThumbsResponse.cs" />
     <Compile Include="Response\GetResponse.cs" />
     <Compile Include="Response\ListResponse.cs" />
     <Compile Include="Response\Open\Debug.cs" />
@@ -74,6 +80,7 @@
     <Compile Include="Response\RemoveResponse.cs" />
     <Compile Include="Response\ReplaceResponse.cs" />
     <Compile Include="Response\TreeResponse.cs" />
+    <Compile Include="PicturesEditor\DefaultPicturesEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="mimeTypes.txt" />

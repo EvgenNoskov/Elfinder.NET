@@ -7,7 +7,7 @@ namespace ElFinder.DTO
     [DataContract]
     internal abstract class DTOBase
     {
-        protected static DateTime _unixOrigin = new DateTime(1970, 1, 1, 0, 0, 0);
+        protected static readonly DateTime _unixOrigin = new DateTime(1970, 1, 1, 0, 0, 0);
         
         /// <summary>
         ///  Name of file/dir. Required
@@ -63,14 +63,16 @@ namespace ElFinder.DTO
                 throw new ArgumentNullException("info");
             if (root == null)
                 throw new ArgumentNullException("root");
-            string ext = info.Extension.ToLower();
             string parentPath = info.Directory.FullName.Substring(root.Directory.FullName.Length);
+            string relativePath = info.FullName.Substring(root.Directory.FullName.Length);
             FileDTO response;
-            string hash = root.VolumeId + Helper.EncodePath(info.FullName.Substring(root.Directory.FullName.Length));
-            if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || info.Extension == ".gif")
+            if (root.CanCreateThumbnail(info))
             {
-                response = new ImageDTO();
-                //((ImageDTO)response).Thumbnail = 
+                ImageDTO imageResponse = new ImageDTO();
+                imageResponse.Thumbnail = root.GetThumbnailPath(relativePath) ?? (object)1;
+                var dim = root.GetImageDimension(info);
+                imageResponse.Dimension = string.Format("{0}x{1}", dim.Width, dim.Height);
+                response = imageResponse;
             }
             else
             {
@@ -78,12 +80,12 @@ namespace ElFinder.DTO
             }
             response.Read = 1;
             response.Write = root.IsReadOnly ? (byte)0 : (byte)1;
-            response.Locked = root.IsReadOnly ? (byte)1 : (byte)0;
+            response.Locked = root.IsLocked ? (byte)1 : (byte)0;
             response.Name = info.Name;
             response.Size = info.Length;
             response.UnixTimeStamp = (long)(info.LastWriteTimeUtc - _unixOrigin).TotalSeconds;
             response.Mime = Helper.GetMimeType(info);
-            response.Hash = hash;
+            response.Hash = root.VolumeId + Helper.EncodePath(relativePath);
             response.ParentHash = root.VolumeId + Helper.EncodePath(parentPath.Length > 0 ? parentPath : info.Directory.Name);
             return response;
         }
@@ -100,13 +102,13 @@ namespace ElFinder.DTO
                     Mime = "directory",
                     Dirs = directory.GetDirectories().Length > 0 ? (byte)1 : (byte)0,
                     Hash = root.VolumeId + Helper.EncodePath(directory.Name),
-                    Locked = root.IsReadOnly ? (byte)1 : (byte)0,//(directory.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ? (byte)1 : (byte)0,
-                    Name = root.Alias,
                     Read = 1,
+                    Write = root.IsReadOnly ? (byte)0 : (byte)1,
+                    Locked = root.IsLocked ? (byte)1 : (byte)0,                    
+                    Name = root.Alias,                    
                     Size = 0,
                     UnixTimeStamp = (long)(directory.LastWriteTimeUtc - _unixOrigin).TotalSeconds,
-                    VolumeId = root.VolumeId,
-                    Write = root.IsReadOnly ? (byte)0 : (byte)1//(directory.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ? (byte)0 : (byte)1
+                    VolumeId = root.VolumeId                    
                 };
                 return response;
             }
@@ -118,12 +120,12 @@ namespace ElFinder.DTO
                     Mime = "directory",
                     ContainsChildDirs = directory.GetDirectories().Length > 0 ? (byte)1 : (byte)0,
                     Hash = root.VolumeId + Helper.EncodePath(directory.FullName.Substring(root.Directory.FullName.Length)),
-                    Locked = root.IsReadOnly ? (byte)1 : (byte)0,//(directory.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ? (byte)1 : (byte)0,
                     Read = 1,
+                    Write = root.IsReadOnly ? (byte)0 : (byte)1,
+                    Locked = root.IsLocked ? (byte)1 : (byte)0,                    
                     Size = 0,
                     Name = directory.Name,
-                    UnixTimeStamp = (long)(directory.LastWriteTimeUtc - _unixOrigin).TotalSeconds,
-                    Write = root.IsReadOnly ? (byte)0 : (byte)1,//(directory.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ? (byte)0: (byte)1,
+                    UnixTimeStamp = (long)(directory.LastWriteTimeUtc - _unixOrigin).TotalSeconds,                    
                     ParentHash = root.VolumeId + Helper.EncodePath(parentPath.Length > 0 ? parentPath : directory.Parent.Name)
                 };
                 return response;

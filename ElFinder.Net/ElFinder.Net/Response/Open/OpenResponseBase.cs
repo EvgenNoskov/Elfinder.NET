@@ -7,12 +7,8 @@ namespace ElFinder.Response
     [DataContract]
     internal class OpenResponseBase
     {
-        private static Debug _debug = new Debug();
-        protected List<DTOBase> _files;
-        private DTOBase _currentWorkingDirectory;
-
         [DataMember(Name="files")]
-        public IEnumerable<DTOBase> Files { get { return _files; } }
+        public List<DTOBase> Files { get { return _files; } }
 
         [DataMember(Name = "cwd")]
         public DTOBase CurrentWorkingDirectory { get { return _currentWorkingDirectory; } }
@@ -28,9 +24,9 @@ namespace ElFinder.Response
             _files = new List<DTOBase>();
             _currentWorkingDirectory = currentWorkingDirectory;
         }
-        public void AddResponse(DTOBase item)
-        {
-            _files.Add(item);
-        }
+
+        private static Debug _debug = new Debug();
+        protected List<DTOBase> _files;
+        private DTOBase _currentWorkingDirectory;
     }
 }
