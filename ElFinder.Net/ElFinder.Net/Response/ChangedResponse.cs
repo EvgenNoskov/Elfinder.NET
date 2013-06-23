@@ -5,12 +5,12 @@ using ElFinder.DTO;
 namespace ElFinder.Response
 {
     [DataContract]
-    internal class PutResponse
+    internal class ChangedResponse
     {
         [DataMember(Name="changed")]
         public List<FileDTO> Changed { get; private set; }
 
-        public PutResponse()
+        public ChangedResponse()
         {
             Changed = new List<FileDTO>();
         }

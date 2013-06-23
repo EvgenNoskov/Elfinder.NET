@@ -11,7 +11,7 @@ namespace ElFinder
     {
         public static bool IsFileFromCache(FileInfo info, HttpRequestBase request, HttpResponseBase response)
         {
-            DateTime updated = info.LastWriteTime;
+            DateTime updated = info.LastWriteTimeUtc;
             string filename = info.Name;
             DateTime modifyDate;
             if (!DateTime.TryParse(request.Headers["If-Modified-Since"], out modifyDate))
@@ -21,7 +21,7 @@ namespace ElFinder
             string eTag = GetFileETag(filename, updated);            
             if (!IsFileModified(updated, eTag, request))
             {
-                response.StatusCode = 304;
+                response.StatusCode = (int)System.Net.HttpStatusCode.NotModified;
                 response.StatusDescription = "Not Modified";
                 response.AddHeader("Content-Length", "0");
                 response.Cache.SetCacheability(HttpCacheability.Public);
@@ -39,19 +39,14 @@ namespace ElFinder
             }
         }
 
-        private static string GetFileETag(string fileName, DateTime modifyDate)
+        private static string GetFileETag(string fileName, DateTime modified)
         {
-            fileName += modifyDate.ToString("d", CultureInfo.InvariantCulture);
-            char[] fileNameChars = fileName.ToCharArray();            
-            byte[] buffer = new byte[_stringEncoder.GetByteCount(fileNameChars, 0, fileName.Length, true)];
-            _stringEncoder.GetBytes(fileNameChars, 0, fileName.Length, buffer, 0, true);            
-            return "\"" + BitConverter.ToString(_md5CryptoProvider.ComputeHash(buffer)).Replace("-", string.Empty) + "\"";
+            return "\"" + Helper.GetFileMd5(fileName, modified) + "\"";
         }
+
         private static bool IsFileModified(DateTime modifyDate, string eTag, HttpRequestBase request)
         {
             DateTime modifiedSince;
-
-            //assume file has been modified unless we can determine otherwise
             bool fileDateModified = true;
 
             //Check If-Modified-Since request header, if it exists 
@@ -75,7 +70,6 @@ namespace ElFinder
             return (eTagChanged || fileDateModified);
         }
 
-        private static Encoder _stringEncoder = Encoding.UTF8.GetEncoder();
-        private static MD5CryptoServiceProvider _md5CryptoProvider = new MD5CryptoServiceProvider();
+       
     }
 }

@@ -99,8 +99,9 @@ namespace ElFinder
                 set
                 {
                     if (value != null && !value.Exists)
-                        throw new ArgumentException("Start directory must exist or can be null", "value");
-                    _startPath = value;
+                        _startPath = null;//throw new ArgumentException("Start directory must exist or can be null", "value");
+                    else
+                        _startPath = value;
                 }
             }       
 
@@ -235,8 +236,10 @@ namespace ElFinder
             {
                 if (!input.Exists)
                     throw new ArgumentException("File not exist");
-                Image image = Image.FromFile(input.FullName);
-                return new Size(image.Width, image.Height);
+                using (Image image = Image.FromFile(input.FullName))
+                {
+                    return new Size(image.Width, image.Height);
+                }
             }
 
             internal bool CanCreateThumbnail(FileInfo input)
@@ -244,54 +247,104 @@ namespace ElFinder
                 return ThumbnailsUrl != null && PicturesEditor.CanProcessFile(input.Extension);
             }
             
-            internal string GetThumbnailPath(string relativePath)
+            internal string GetExistingThumbPath(FileInfo originalImage)
             {
-                //FileInfo thumb = new FileInfo(Path.Combine(_directory.FullName, relativePath));
-                //if (thumb.Exists)
-                //    return thumb.FullName;
-                return null;
+                string thumbPath = GenerateThumbPath(originalImage);
+                return thumbPath != null && File.Exists(thumbPath) ? thumbPath : null;
             }
 
-            internal string GetThumbnailHash(string originalHash)
+            internal string GetExistingThumbPath(DirectoryInfo originalDirectory)
             {
-                string path = Helper.DecodePath(originalHash.Substring(VolumeId.Length));
-                return originalHash + PicturesEditor.ConvertThumbnailExtension(Path.GetExtension(path));
+                if (_thumbnailsDirectory == null)
+                    return null;
+                string relativePath = originalDirectory.FullName.Substring(_directory.FullName.Length);
+                string thumbDir = _thumbnailsDirectory.FullName + relativePath;
+                return System.IO.Directory.Exists(thumbDir) ? thumbDir : null;
             }
 
-            internal Thumbnail GenerateThumbnail(FullPath input)
+            internal string GetExistingThumbHash(FileInfo originalImage)
             {
-                string path = input.File.FullName;
+                string thumbPath = GetExistingThumbPath(originalImage);
+                if (thumbPath == null)
+                    return null;
+                string relativePath = thumbPath.Substring(_thumbnailsDirectory.FullName.Length);
+                return VolumeId + Helper.EncodePath(relativePath);
+            }
+
+            internal string GenerateThumbHash(FileInfo originalImage)
+            {                
+                if (_thumbnailsDirectory == null)
+                {
+                    string thumbName = Path.GetFileNameWithoutExtension(originalImage.Name) + "_" + Helper.GetFileMd5(originalImage) + originalImage.Extension;
+                    string relativePath = originalImage.DirectoryName.Substring(_directory.FullName.Length);
+                    return VolumeId + Helper.EncodePath(relativePath + "\\" + thumbName);
+                }
+                else
+                {
+                    string thumbPath = GenerateThumbPath(originalImage);
+                    string relativePath = thumbPath.Substring(_thumbnailsDirectory.FullName.Length);
+                    return VolumeId + Helper.EncodePath(relativePath);
+                }
+            }
+
+            internal ImageWithMime GenerateThumbnail(FullPath originalImage)
+            {
+                string name = originalImage.File.Name;
+                for (int i = name.Length - 1; i >= 0; i--)
+                {
+                    if (name[i] == '_')
+                    {
+                        name = name.Substring(0, i);
+                        break;
+                    }
+                }
+                string fullPath = originalImage.File.DirectoryName + "\\" + name + originalImage.File.Extension;
+                
                 if (_thumbnailsDirectory != null)
                 {
                     FileInfo thumbPath;
-                    if (input.File.FullName.StartsWith(_thumbnailsDirectory.FullName))
-                        thumbPath = input.File;
+                    if (originalImage.File.FullName.StartsWith(_thumbnailsDirectory.FullName))
+                        thumbPath = originalImage.File;
                     else
-                        thumbPath = new FileInfo(Path.Combine(_thumbnailsDirectory.FullName, input.RelativePath));
+                        thumbPath = new FileInfo(Path.Combine(_thumbnailsDirectory.FullName, originalImage.RelativePath));
                     if (!thumbPath.Exists)
                     {
                         if (!thumbPath.Directory.Exists)
-                        {
                             System.IO.Directory.CreateDirectory(thumbPath.Directory.FullName);
-                        }
-                        using (FileStream stream = thumbPath.Create())
+                        using (FileStream thumbFile = thumbPath.Create())
                         {
-                            Thumbnail thumb = PicturesEditor.GetThumbnail(File.OpenRead(path), _thumbnailsSize, true);
-                            thumb.ImageStream.CopyTo(stream);
-                            thumb.ImageStream.Position = 0;
-                            return thumb;
+                            using (FileStream original = File.OpenRead(fullPath))
+                            {
+                                ImageWithMime thumb = PicturesEditor.GenerateThumbnail(original, _thumbnailsSize, true);
+                                thumb.ImageStream.CopyTo(thumbFile);
+                                thumb.ImageStream.Position = 0;
+                                return thumb;
+                            }
                         }
                     }
                     else
                     {
-                        return new Thumbnail(PicturesEditor.ConvertThumbnailExtension(thumbPath.Extension), thumbPath.OpenRead());
+                        return new ImageWithMime(PicturesEditor.ConvertThumbnailExtension(thumbPath.Extension), thumbPath.OpenRead());
                     }
                 }
                 else
                 {
-                    return PicturesEditor.GetThumbnail(File.OpenRead(path), _thumbnailsSize, true);
+                    using (FileStream original = File.OpenRead(fullPath))
+                    {
+                        return PicturesEditor.GenerateThumbnail(original, _thumbnailsSize, true);   
+                    }                    
                 }
-            }  
+            }
+
+            private string GenerateThumbPath(FileInfo originalImage)
+            {
+                if (_thumbnailsDirectory == null || !CanCreateThumbnail(originalImage))
+                    return null;
+                string relativePath = originalImage.FullName.Substring(_directory.FullName.Length);
+                string thumbDir = Path.GetDirectoryName(_thumbnailsDirectory.FullName + relativePath);
+                string thumbName = Path.GetFileNameWithoutExtension(originalImage.Name) + "_" + Helper.GetFileMd5(originalImage) + originalImage.Extension;
+                return Path.Combine(thumbDir, thumbName);
+            }
 
             private string _volumeId;
             private string _alias;

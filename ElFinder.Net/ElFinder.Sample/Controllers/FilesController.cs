@@ -27,8 +27,8 @@ namespace ElFinder.Sample.Controllers
                     {
                         Alias = "My documents",
                         StartPath = new DirectoryInfo(Server.MapPath("~/Files/новая папка")),
-                        MaxUploadSizeInMb = 2.2,
                         ThumbnailsStorage = thumbsStorage,
+                        MaxUploadSizeInMb = 2.2,
                         ThumbnailsUrl = "Thumbnails/"
                     });
                     _connector = new Connector(driver); 

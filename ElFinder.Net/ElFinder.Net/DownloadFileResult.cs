@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using System.Web;
 using System.Web.Mvc;
 
@@ -40,7 +38,7 @@ namespace ElFinder
             else
             {
                 mime = Helper.GetMimeType(File);
-                disposition = mime.Contains("image") || mime.Contains("text") || mime == "application/x-shockwave-flash" ? "inline" : "attachment; " + fileName;
+                disposition = (mime.Contains("image") || mime.Contains("text") || mime == "application/x-shockwave-flash" ? "inline; " : "attachment; ") + fileName;
             }           
 			
             response.ContentType = mime;

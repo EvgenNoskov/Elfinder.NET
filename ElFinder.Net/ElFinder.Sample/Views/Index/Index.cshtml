@@ -13,7 +13,7 @@
     <script type="text/javascript">
         $(function () {
             var myCommands = elFinder.prototype._options.commands;
-            var disabled = ['extract', 'archive', 'resize', 'help', 'select'];
+            var disabled = ['extract', 'archive', 'help', 'select'];
             $.each(disabled, function (i, cmd) {
                 (idx = $.inArray(cmd, myCommands)) !== -1 && myCommands.splice(idx, 1);
             });
@@ -21,7 +21,7 @@
             var options = {
                 url: 'connector',
                 commands: myCommands,
-                lang: 'ru',
+                lang: 'en',
                 uiOptions: {
                     toolbar: [
 		                ['back', 'forward'],
@@ -33,7 +33,7 @@
 		                ['quicklook'],
 		                ['copy', 'cut', 'paste'],
 		                ['rm'],
-		                ['duplicate', 'rename', 'edit'],
+		                ['duplicate', 'rename', 'edit', 'resize'],
 		                ['view', 'sort']
 	                ]
                 },

@@ -138,6 +138,7 @@
     <Content Include="Content\elfinder\css\smoothness-1.8.23\jquery-ui-1.8.23.custom.css" />
     <Content Include="Content\elfinder\sounds\rm.wav" />
     <Content Include="Global.asax" />
+    <Content Include="Sounds\rm.wav" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

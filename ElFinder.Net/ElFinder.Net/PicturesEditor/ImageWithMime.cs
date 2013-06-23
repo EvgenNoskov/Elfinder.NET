@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ElFinder
 {
-    public class Thumbnail
+    public class ImageWithMime
     {
         public string Mime { get; private set; }
         public Stream ImageStream { get; private set; }
-        public Thumbnail(string mime, Stream stream)
+        public ImageWithMime(string mime, Stream stream)
         {
             Mime = mime;
             ImageStream = stream;

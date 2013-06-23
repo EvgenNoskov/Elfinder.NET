@@ -64,7 +64,7 @@
     <Compile Include="PicturesEditor\IPicturesEditor.cs" />
     <Compile Include="JsonDataContractResult.cs" />
     <Compile Include="Mime.cs" />
-    <Compile Include="PicturesEditor\Thumbnail.cs" />
+    <Compile Include="PicturesEditor\ImageWithMime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Response\AddResponse.cs" />
     <Compile Include="Response\DimResponse.cs" />
@@ -76,7 +76,7 @@
     <Compile Include="Response\Open\OpenResponse.cs" />
     <Compile Include="Response\Open\OpenResponseBase.cs" />
     <Compile Include="Response\Open\Options.cs" />
-    <Compile Include="Response\PutResponse.cs" />
+    <Compile Include="Response\ChangedResponse.cs" />
     <Compile Include="Response\RemoveResponse.cs" />
     <Compile Include="Response\ReplaceResponse.cs" />
     <Compile Include="Response\TreeResponse.cs" />

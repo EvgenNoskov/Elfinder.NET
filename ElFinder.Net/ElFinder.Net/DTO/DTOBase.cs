@@ -69,7 +69,7 @@ namespace ElFinder.DTO
             if (root.CanCreateThumbnail(info))
             {
                 ImageDTO imageResponse = new ImageDTO();
-                imageResponse.Thumbnail = root.GetThumbnailPath(relativePath) ?? (object)1;
+                imageResponse.Thumbnail = root.GetExistingThumbHash(info) ?? (object)1;
                 var dim = root.GetImageDimension(info);
                 imageResponse.Dimension = string.Format("{0}x{1}", dim.Width, dim.Height);
                 response = imageResponse;

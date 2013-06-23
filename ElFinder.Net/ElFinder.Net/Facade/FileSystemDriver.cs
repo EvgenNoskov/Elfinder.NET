@@ -64,6 +64,22 @@ namespace ElFinder
                     }
                 }
             }
+
+            private void RemoveThumbs(FullPath path)
+            {
+                if (path.Directory != null)
+                {
+                    string thumbPath = path.Root.GetExistingThumbPath(path.Directory);
+                    if (thumbPath != null)
+                        Directory.Delete(thumbPath, true);
+                }
+                else
+                {
+                    string thumbPath = path.Root.GetExistingThumbPath(path.File);
+                    if (thumbPath != null)
+                        File.Delete(thumbPath);
+                }
+            }
         #endregion
 
         #region public 
@@ -253,34 +269,35 @@ namespace ElFinder
             FullPath fullPath = ParsePath(target);
             var answer = new ReplaceResponse();
             answer.Removed.Add(target);
+            RemoveThumbs(fullPath);
             if (fullPath.Directory != null)
-            { 
-                fullPath.Directory.MoveTo(Path.Combine(fullPath.Directory.Parent.FullName, name));
-                var newDir = new DirectoryInfo(Path.Combine(fullPath.Directory.Parent.FullName, name));
-                answer.Added.Add(DTOBase.Create(newDir, fullPath.Root));
-
+            {
+                string newPath = Path.Combine(fullPath.Directory.Parent.FullName, name);
+                System.IO.Directory.Move(fullPath.Directory.FullName, newPath);
+                answer.Added.Add(DTOBase.Create(new DirectoryInfo(newPath), fullPath.Root));
             }
             else
             {
-                fullPath.File.MoveTo(Path.Combine(fullPath.File.Directory.FullName, name));
-                var newFile = new FileInfo(Path.Combine(fullPath.File.Directory.FullName, name));
-                answer.Added.Add(DTOBase.Create(newFile, fullPath.Root));
+                string newPath = Path.Combine(fullPath.File.DirectoryName, name);
+                File.Move(fullPath.File.FullName, newPath);
+                answer.Added.Add(DTOBase.Create(new FileInfo(newPath), fullPath.Root));
             }
             return Json(answer);
         }
         JsonResult IDriver.Remove(IEnumerable<string> targets)
         {
             RemoveResponse answer = new RemoveResponse();
-            foreach (var item in targets)
+            foreach (string item in targets)
             {
                 FullPath fullPath = ParsePath(item);
+                RemoveThumbs(fullPath);                
                 if (fullPath.Directory != null)
                 {
-                    fullPath.Directory.Delete(true);
+                    System.IO.Directory.Delete(fullPath.Directory.FullName, true);
                 }
                 else
                 {
-                    fullPath.File.Delete();
+                    File.Delete(fullPath.File.FullName);
                 }
                 answer.Removed.Add(item);
             }
@@ -299,7 +316,7 @@ namespace ElFinder
         JsonResult IDriver.Put(string target, string content)
         {
             FullPath fullPath = ParsePath(target);
-            PutResponse answer = new PutResponse();
+            ChangedResponse answer = new ChangedResponse();
             using (StreamWriter writer = new StreamWriter(fullPath.File.FullName, false))
             {
                 writer.Write(content);
@@ -321,6 +338,7 @@ namespace ElFinder
                         Directory.Delete(newDir.FullName, true);
                     if (isCut)
                     {
+                        RemoveThumbs(src);
                         src.Directory.MoveTo(newDir.FullName);
                         response.Removed.Add(item);
                     }
@@ -337,6 +355,7 @@ namespace ElFinder
                         File.Delete(newFilePath);
                     if (isCut)
                     {
+                        RemoveThumbs(src);
                         src.File.MoveTo(newFilePath);
                         response.Removed.Add(item);
                     }
@@ -367,20 +386,19 @@ namespace ElFinder
             for (int i = 0; i < targets.AllKeys.Length; i++)
             {
                 HttpPostedFileBase file = targets[i];                
-                string path = Path.Combine(dest.Directory.FullName, file.FileName);
+                FileInfo path = new FileInfo(Path.Combine(dest.Directory.FullName, file.FileName));
 
-                if (File.Exists(path))
+                if (path.Exists)
                 {
                     if (dest.Root.UploadOverwrite)
                     {
                         //if file already exist we rename the current file, 
                         //and if upload is succesfully delete temp file, in otherwise we restore old file
-                        string tmpPath = path + Guid.NewGuid();
+                        string tmpPath = path.FullName + Guid.NewGuid();
                         bool uploaded = false;
                         try
                         {
-                            File.Move(path, tmpPath);
-                            file.SaveAs(path);
+                            file.SaveAs(tmpPath);
                             uploaded = true;
                         }
                         catch { }
@@ -388,39 +406,25 @@ namespace ElFinder
                         {
                             if (uploaded)
                             {
-                                File.Delete(tmpPath);
+                                File.Delete(path.FullName);
+                                File.Move(tmpPath, path.FullName);
                             }
                             else
                             {
-                                if (File.Exists(path))
-                                    File.Delete(path);
-                                File.Move(tmpPath, path);
+                                File.Delete(tmpPath);
                             }
                         }
                     }
                     else
                     {
-                        string name = null;
-                        for (int j = 1; j < 100; j++)
-                        {
-                            string suggestName = Path.GetFileNameWithoutExtension(file.FileName) + "-" + j + Path.GetExtension(file.FileName);
-                            if (!File.Exists(Path.Combine(dest.Directory.FullName, suggestName)))
-                            {
-                                name = suggestName;
-                                break;
-                            }
-                        }
-                        if (name == null)
-                            name = Path.GetFileNameWithoutExtension(file.FileName) + "-" + Guid.NewGuid() + Path.GetExtension(file.FileName);
-                        path = Path.Combine(dest.Directory.FullName, name);
-                        file.SaveAs(path);
+                        file.SaveAs(Path.Combine(path.DirectoryName, Helper.GetDuplicatedName(path)));
                     }
                 }
                 else
                 {
-                    file.SaveAs(path);
+                    file.SaveAs(path.FullName);
                 }                
-                response.Added.Add((FileDTO)DTOBase.Create(new FileInfo(path), dest.Root));
+                response.Added.Add((FileDTO)DTOBase.Create(new FileInfo(path.FullName), dest.Root));
             }
             return Json(response);
         }
@@ -488,7 +492,7 @@ namespace ElFinder
             foreach (string target in targets)
             {
                 FullPath path = ParsePath(target);
-                response.Images.Add(target, path.Root.GetThumbnailHash(target));
+                response.Images.Add(target, path.Root.GenerateThumbHash(path.File));
             }
             return Json(response);
         }
@@ -497,6 +501,33 @@ namespace ElFinder
             FullPath path = ParsePath(target);
             DimResponse response = new DimResponse(path.Root.GetImageDimension(path.File));
             return Json(response);
+        }
+        JsonResult IDriver.Resize(string target, int width, int height)
+        {
+            FullPath path = ParsePath(target);
+            RemoveThumbs(path);
+            path.Root.PicturesEditor.Resize(path.File.FullName, width, height);
+            var output = new ChangedResponse();
+            output.Changed.Add((FileDTO)DTOBase.Create(path.File, path.Root));
+            return Json(output);
+        }
+        JsonResult IDriver.Crop(string target, int x, int y, int width, int height)
+        {
+            FullPath path = ParsePath(target);
+            RemoveThumbs(path);
+            path.Root.PicturesEditor.Crop(path.File.FullName, x, y, width, height);
+            var output = new ChangedResponse();
+            output.Changed.Add((FileDTO)DTOBase.Create(path.File, path.Root));
+            return Json(output);
+        }
+        JsonResult IDriver.Rotate(string target, int degree)
+        {
+            FullPath path = ParsePath(target);
+            RemoveThumbs(path);
+            path.Root.PicturesEditor.Rotate(path.File.FullName, degree);
+            var output = new ChangedResponse();
+            output.Changed.Add((FileDTO)DTOBase.Create(path.File, path.Root));
+            return Json(output);
         }
 
         #endregion IDriver

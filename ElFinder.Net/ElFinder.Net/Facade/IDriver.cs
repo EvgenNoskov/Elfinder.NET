@@ -22,6 +22,9 @@ namespace ElFinder
         JsonResult Upload(string target, HttpFileCollectionBase targets);
         JsonResult Thumbs(IEnumerable<string> targets);
         JsonResult Dim(string target);
+        JsonResult Resize(string target, int width, int height);
+        JsonResult Crop(string target, int x, int y, int width, int height);
+        JsonResult Rotate(string target, int degree);
         ActionResult File(string target, bool download);
         FullPath ParsePath(string target);
     }

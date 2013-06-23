@@ -154,6 +154,23 @@ namespace ElFinder
                             return Error.MissedParameter(cmdName);
                         return _driver.Dim(target);
                     }
+                case "resize":
+                    {
+                        if (string.IsNullOrEmpty(target))
+                            return Error.MissedParameter(cmdName);                        
+                        switch (parameters["mode"])
+                        {
+                            case "resize":
+                                return _driver.Resize(target, int.Parse(parameters["width"]), int.Parse(parameters["height"]));
+                            case "crop":
+                                return _driver.Crop(target, int.Parse(parameters["x"]), int.Parse(parameters["y"]), int.Parse(parameters["width"]), int.Parse(parameters["height"]));
+                            case "rotate":
+                                return _driver.Rotate(target, int.Parse(parameters["degree"]));
+                            default:
+                                break;
+                        }
+                        return Error.CommandNotFound();
+                    }
                 default:
                     return Error.CommandNotFound();
             }
@@ -171,15 +188,7 @@ namespace ElFinder
 
         public ActionResult GetThumbnail(HttpRequestBase request, HttpResponseBase response, string hash)
         {
-            string thumbHash = null;
-            for (int i = 0; i < hash.Length; i++)
-            {
-                if (hash[i] == '.')
-                {
-                    thumbHash = hash.Substring(0, i);
-                    break;
-                }
-            }
+            string thumbHash = hash;
             if (thumbHash != null)
             {
                 FullPath path = _driver.ParsePath(thumbHash);
@@ -187,8 +196,8 @@ namespace ElFinder
                 {
                     if (!HttpCacheHelper.IsFileFromCache(path.File, request, response))
                     {
-                        Thumbnail thumb = path.Root.GenerateThumbnail(path);
-                        return new FileStreamResult(thumb.ImageStream, thumb.Mime);
+                        ImageWithMime thumb = path.Root.GenerateThumbnail(path);
+                        return new FileStreamResult(thumb.ImageStream, thumb.Mime);                        
                     }
                     else
                     {
