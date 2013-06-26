@@ -237,7 +237,8 @@ namespace ElFinder
             TreeResponse answer = new TreeResponse();
             foreach (var item in fullPath.Directory.GetDirectories())
             {
-                answer.Tree.Add(DTOBase.Create(item, fullPath.Root));
+                if ((item.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                    answer.Tree.Add(DTOBase.Create(item, fullPath.Root));
             }
             return Json(answer);
         }

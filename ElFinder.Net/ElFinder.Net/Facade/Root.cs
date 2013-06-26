@@ -72,7 +72,19 @@ namespace ElFinder
             /// <summary>
             /// Get or sets url that points to path directory (also called 'root URL'). 
             /// </summary>
-            public string Url { get; set; }
+            public string Url
+            {
+                get
+                {
+                    return _url;
+                }
+                set
+                {
+                    if (value == null)
+                        throw new ArgumentNullException("Url can not be null", "value");
+                    _url = value;
+                }
+            }
 
             /// <summary>
             /// Get or sets if root for read only (users can't change file)

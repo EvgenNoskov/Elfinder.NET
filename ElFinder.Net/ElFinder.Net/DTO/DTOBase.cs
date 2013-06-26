@@ -97,10 +97,20 @@ namespace ElFinder.DTO
                 throw new ArgumentNullException("root");
             if (root.Directory.FullName == directory.FullName)
             {
+                bool hasSubdirs = false;
+                DirectoryInfo[] subdirs = directory.GetDirectories();
+                foreach (var item in subdirs)
+                {
+                    if ((item.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                    {
+                        hasSubdirs = true;
+                        break;
+                    }
+                }
                 RootDTO response = new RootDTO()
                 {
                     Mime = "directory",
-                    Dirs = directory.GetDirectories().Length > 0 ? (byte)1 : (byte)0,
+                    Dirs = hasSubdirs ? (byte)1 : (byte)0,
                     Hash = root.VolumeId + Helper.EncodePath(directory.Name),
                     Read = 1,
                     Write = root.IsReadOnly ? (byte)0 : (byte)1,
