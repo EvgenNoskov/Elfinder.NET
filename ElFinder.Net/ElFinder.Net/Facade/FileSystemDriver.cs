@@ -21,7 +21,7 @@ namespace ElFinder
 
             private JsonResult Json(object data)
             {
-                return new JsonDataContractResult(data) { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                return new JsonDataContractResult(data) { JsonRequestBehavior = JsonRequestBehavior.AllowGet, ContentType = "text/html" };
             }
             private void DirectoryCopy(DirectoryInfo sourceDir, string destDirName, bool copySubDirs)
             {
@@ -387,7 +387,7 @@ namespace ElFinder
             for (int i = 0; i < targets.AllKeys.Length; i++)
             {
                 HttpPostedFileBase file = targets[i];                
-                FileInfo path = new FileInfo(Path.Combine(dest.Directory.FullName, file.FileName));
+                FileInfo path = new FileInfo(Path.Combine(dest.Directory.FullName, Path.GetFileName(file.FileName)));
 
                 if (path.Exists)
                 {
