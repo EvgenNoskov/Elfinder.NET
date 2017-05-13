@@ -16,3 +16,5 @@ Not implemented features:
 
 Usage:
 - Leniel Macaferi create a great post of usage this port http://www.leniel.net/2013/04/manage-folders-and-files-in-your-aspnet-mvc-project-with-elfinder-net-file-manager.html
+
+This is clone of https://elfinder.codeplex.com/
