@@ -121,11 +121,8 @@ namespace ElFinder
                         if (targets == null)
                             Error.MissedParameter("targets");
                         string src = parameters["src"];
-                        if (string.IsNullOrEmpty(src))
-                            return Error.MissedParameter("src");
-
                         string dst = parameters["dst"];
-                        if (string.IsNullOrEmpty(src))
+                        if (string.IsNullOrEmpty(dst))
                             return Error.MissedParameter("dst");
 
                         return _driver.Paste(src, dst, targets, !string.IsNullOrEmpty(parameters["cut"]) && parameters["cut"] == "1");
