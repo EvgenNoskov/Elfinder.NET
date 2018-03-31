@@ -121,9 +121,6 @@ namespace ElFinder
                         if (targets == null)
                             Error.MissedParameter("targets");
                         string src = parameters["src"];
-                        if (string.IsNullOrEmpty(src))
-                            return Error.MissedParameter("src");
-
                         string dst = parameters["dst"];
                         if (string.IsNullOrEmpty(dst))
                             return Error.MissedParameter("dst");
