@@ -14,7 +14,10 @@ Implemented features from original php connector:
 Not implemented features:
 - create archives
 
-Usage:
+### .NET Core support
+You can find .NET Core version written by Matt Gordon at https://github.com/gordon-matt/elFinder.NetCore
+
+### Usage:
 - Leniel Macaferi create a great post of usage this port http://www.leniel.net/2013/04/manage-folders-and-files-in-your-aspnet-mvc-project-with-elfinder-net-file-manager.html
 
 This is clone of https://elfinder.codeplex.com/
